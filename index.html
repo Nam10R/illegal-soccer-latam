@@ -65,8 +65,8 @@
     .left { left: 0; border-left-width: 0 }
     .right { right: 0; border-right-width: 0 }
     .player {
-      width: clamp(.7rem,1.35vw,1.05rem); aspect-ratio: 1; border: 2px solid #fff8e9;
-      border-radius: 50%; background: #173d30; translate: -50% -50%;
+      display: grid; place-items: center; width: clamp(2.75rem,4vw,3.1rem); aspect-ratio: 1; padding: 0; border: 2px solid #c6d9bb;
+      border-radius: 50%; background: #173d30; color: #fff8e9; translate: -50% -50%; font: 800 .95rem/1 Consolas,monospace; cursor: pointer;
     }
     .keeper { left: 9%; top: 50% }
     .back { left: 30%; top: 68% }
@@ -76,7 +76,7 @@
     .diagram[data-view="porteros"] .keeper,
     .diagram[data-view="defensas"] .back,
     .diagram[data-view="mediocampistas"] .mid,
-    .diagram[data-view="clubes"] .player { background: var(--lime); border-color: var(--ink); box-shadow: 0 0 0 3px var(--lime),0 0 0 8px #d7fc692b }
+    .diagram[data-view="clubes"] .player { background: var(--lime); color:var(--ink); border-color: var(--ink); box-shadow: 0 0 0 3px var(--lime),0 0 0 8px #d7fc692b }
     .diagram figcaption { margin-top: 1rem; text-align: right; color: #d7e9c9 }
     .rankings { padding-block: clamp(2rem,4vw,3.65rem) 4rem }
     h2 { font-size: clamp(2.1rem,4.3vw,3.6rem); line-height: 1.05; letter-spacing: -.065em }
@@ -115,6 +115,32 @@
     .lookup td { border-top: 1px solid var(--rule) }
     .lookup small { display: block; color: var(--muted) }
     .lookup caption { padding: .85rem 1rem; text-align: left; font-weight: 700 }
+    .player:hover { outline: 2px solid white; outline-offset: 3px }
+    .info-panel,.ideal,.club-card { margin-top: 1rem; border: 1px solid var(--rule); border-radius: .85rem; background: white; padding: 1rem 1.25rem }
+    .info-panel summary { cursor: pointer; font-weight: 750; padding-block: .3rem }
+    .info-panel dl,.facts { display: grid; grid-template-columns: minmax(6rem,auto) 1fr; gap: .55rem 1rem; margin-block: 1rem }
+    dt { font-weight: 750 } dd { margin: 0; overflow-wrap: anywhere }
+    .info-panel p,.ideal p { margin: .5rem 0; color: var(--muted) }
+    .ideal { border-left: 5px solid #55744b; background:#edf2e6 }
+    .ideal h3,.club-card h3 { margin: 0; font-size: 1.3rem; letter-spacing: -.025em }
+    .club-link { display: flex; align-items: center; gap: 1rem; width: fit-content; margin-top: .75rem; font-size: 1.15rem; font-weight: 700; text-underline-offset:.2rem }
+    .club-link img { width: 4rem; height: 4rem; border-radius:.6rem }
+    .club-view { min-height: 65vh; padding-block: 2rem 4rem }
+    .club-hero { display:flex; flex-wrap:wrap; gap: clamp(1rem,4vw,3rem); align-items:center; margin:1.25rem 0; padding:clamp(1.25rem,4vw,3rem); background:#172628; color:#fff; border-radius:1rem }
+    .club-hero img { width:clamp(7rem,19vw,13rem); height:auto; border-radius:.75rem }
+    .club-hero h1 { font-size:clamp(2.3rem,6vw,5rem); letter-spacing:-.055em }
+    .club-hero p { color:#deead7; margin:.8rem 0 0 }
+    .member-link { text-decoration:underline; text-underline-offset:.18rem; border:0; background:transparent; color:var(--ink); font:inherit; font-weight:700; cursor:pointer; padding:.3rem 0; text-align:left }
+    #roster { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr)); gap:.65rem; list-style:none; margin:1.25rem 0 .25rem; padding:0 }
+    #roster .member-link { width:100%; height:100%; display:flex; align-items:center; gap:.85rem; padding:.75rem; border:1px solid var(--rule); background:#f7f9f3; border-radius:.65rem; text-decoration:none }
+    #roster .member-link:hover { background:#edf2e6; border-color:#6b8a70 }
+    .avatar { flex:none; width:3.6rem; height:3.6rem; border-radius:.65rem; object-fit:cover; background:#dfe9da }
+    .member-link strong,.member-link small { display:block }
+    .member-link small { font-size:.875rem; font-weight:500; color:var(--muted) }
+    #profile-avatar { width:6rem; height:6rem; margin-bottom:.65rem }
+    dialog { width:min(28rem,90%); max-height:85vh; overflow:auto; border:1px solid var(--rule); border-radius:1rem; padding:1.6rem; color:var(--ink); background:white }
+    dialog::backdrop { background:#0c231b99 }
+    dialog h2 { font-size:2rem; overflow-wrap:anywhere } dialog button { min-height:2.75rem; padding:.4rem 1rem; border:0; border-radius:.5rem; background:var(--ink); color:white; cursor:pointer }
     .account { min-height: 65vh; display: grid; place-items: center; padding-block: 3rem }
     .account article { width: min(100%, 27rem); padding: clamp(1.5rem,4vw,2.5rem); background: white; border: 1px solid var(--rule); border-top: .35rem solid #486e50; border-radius: .85rem; box-shadow: 0 .45rem 1.5rem #112b250a }
     .account h1 { font: 800 clamp(1.9rem,5vw,2.6rem)/1.1 "Barlow",Arial,sans-serif; text-transform: none; letter-spacing: -.045em }
@@ -174,10 +200,13 @@
   <div id="ranking-view">
   <section class="hero" aria-labelledby="title"><div class="wrap">
     <div class="headline"><p class="eyebrow"><i class="bars" aria-hidden="true"></i>Illegal Soccer / Latinoamérica</p><h1 id="title">Ranking <span>LATAM</span></h1></div>
-    <figure class="diagram" data-view="delanteros" aria-hidden="true">
+    <figure class="diagram" data-view="delanteros" aria-label="Cancha interactiva de cuatro jugadores">
       <div class="field"><i class="midline"></i><i class="ring"></i><i class="spot"></i><i class="penalty left"></i><i class="penalty right"></i><i class="goal left"></i><i class="goal right"></i>
-        <i class="player keeper"></i><i class="player back"></i><i class="player mid"></i><i class="player forward"></i></div>
-      <figcaption>4 vs 4 · <span id="field-label">Delanteros</span></figcaption>
+        <button type="button" class="player keeper" data-position="porteros" aria-label="Abrir ranking de porteros">GK</button>
+        <button type="button" class="player back" data-position="defensas" aria-label="Abrir ranking de defensas">DEF</button>
+        <button type="button" class="player mid" data-position="mediocampistas" aria-label="Abrir ranking de mediocampistas">MC</button>
+        <button type="button" class="player forward" data-position="delanteros" aria-label="Abrir ranking de delanteros">DC</button></div>
+      <figcaption>4 vs 4 · Tocá un puesto para ver su ranking</figcaption>
     </figure>
   </div></section>
   <section class="rankings wrap" aria-labelledby="heading">
@@ -194,6 +223,10 @@
       <button type="button" aria-pressed="false" data-category="porteros">Porteros</button>
       <button type="button" aria-pressed="false" data-category="clubes">Clubes</button>
     </div>
+    <section class="club-card" id="club-directory" hidden>
+      <h3>Clubes de la comunidad</h3>
+      <a class="club-link" href="#club/arshadows-fc"><img src="arshadows-fc.png" width="64" height="64" alt="">Arshadows FC</a>
+    </section>
     <div class="board"><span id="announcement" class="sr-only" role="status"></span>
       <table class="lookup" hidden><caption></caption><thead><tr><th scope="col">Puesto</th><th scope="col" id="name-column">Jugador</th><th scope="col">Categoría</th><th scope="col">País</th></tr></thead><tbody></tbody></table>
       <div class="tablehead" aria-hidden="true"><span>Puesto</span><span id="entity">Delantero</span><span>País</span></div>
@@ -203,8 +236,25 @@
         <p id="detail">Los puestos se publicarán cuando haya resultados confirmados de la comunidad latinoamericana.</p>
       </div>
     </div>
+    <details class="info-panel"><summary>Criterios por posición</summary>
+      <p>Para comparar rendimientos, cada cifra debe ir acompañada de la cantidad de partidos jugados y de una planilla o un video que permita verificarla.</p>
+      <dl><dt>Delanteros</dt><dd>Goles por partido.</dd>
+      <dt>Mediocampistas</dt><dd>Asistencias por partido.</dd>
+      <dt>Defensas</dt><dd>Recuperaciones y bloqueos registrados por partido.</dd>
+      <dt>Porteros</dt><dd>Atajadas por partido y, si se conocen los tiros al arco recibidos, porcentaje de atajadas.</dd></dl>
+    </details>
+    <aside class="ideal"><h3>El cuatro ideal de Sudamérica</h3>
+      <p>En una futura votación, la comunidad elegirá un portero (GK), un defensa (DEF), un mediocampista (MC) y un delantero (DC). La fecha de apertura está pendiente.</p>
+    </aside>
   </section>
   </div>
+  <section class="club-view wrap" id="club-view" hidden aria-labelledby="club-title">
+    <a href="#clubes">Volver a clubes</a>
+    <div class="club-hero"><img src="arshadows-fc.png" width="200" height="200" alt="Escudo de Arshadows FC">
+      <div><p class="eyebrow">Illegal Soccer · Clubes</p><h1 id="club-title" tabindex="-1">Arshadows FC</h1>
+      <p>Club de la comunidad de Illegal Soccer LATAM · Fútbol 4 vs 4</p></div></div>
+    <section class="club-card"><h2>Plantel</h2><p id="roster-empty">El plantel está pendiente de confirmación.</p><ul id="roster" hidden></ul></section>
+  </section>
   <section id="account-view" class="account wrap" aria-labelledby="account-title" hidden>
     <article><h1 id="account-title" tabindex="-1">Iniciar sesión</h1>
       <p>Próximamente vas a poder iniciar sesión con tu cuenta de Roblox.</p>
@@ -213,12 +263,88 @@
     </article>
   </section>
 </main>
+<dialog id="player-profile" aria-labelledby="profile-title">
+  <img id="profile-avatar" class="avatar" width="96" height="96" alt="" hidden>
+  <h2 id="profile-title"></h2><dl class="facts" id="profile-facts"></dl>
+  <form method="dialog"><button>Cerrar ficha</button></form>
+</dialog>
 <footer><div class="wrap"><strong>Illegal Soccer LATAM</strong><span>Ranking de la comunidad</span></div></footer>
 <script>
   const categories = { delanteros: "Delantero", mediocampistas: "Mediocampista", defensas: "Defensa", porteros: "Portero", clubes: "Club" };
-  // Cada registro confirmado incluye categoría, puesto dentro de esa categoría, nombre, país y usuario opcional.
-  // Formato de los registros: { category, rank, name, country, username }.
-  const rankings = [];
+  // Una ficha puede pertenecer al plantel antes de tener un puesto en el ranking.
+  // Campos opcionales: rank, country, username, club, tournament y robloxId.
+  const clubName = "Arshadows FC";
+  const rankings = [
+    { name: "PPwizzard", username: "ratitalandxxx", robloxId: "4416575058", category: "porteros", club: clubName },
+    { name: "Nam", username: "elfrancho14", robloxId: "607353710", club: clubName },
+    { name: "Meks", username: "kqmek000", robloxId: "9048750823", club: clubName },
+    { name: "F4ke", username: "Ruim_f4ke", robloxId: "11557735696", club: clubName },
+    { name: "Fabri", username: "fabriciopaa", robloxId: "721994680", club: clubName }
+  ];
+  const profile = document.getElementById("player-profile");
+  function playerLink(entry) {
+    const link = document.createElement("button");
+    link.type = "button";
+    link.className = "member-link";
+    link.textContent = entry.name;
+    link.addEventListener("click", () => {
+      document.getElementById("profile-title").textContent = entry.name;
+      const portrait = document.getElementById("profile-avatar");
+      portrait.hidden = !entry.robloxId;
+      if (entry.robloxId) portrait.src = "avatar-" + entry.robloxId + ".png";
+      const facts = document.getElementById("profile-facts");
+      facts.replaceChildren();
+      const fields = [
+        ["Posición", categories[entry.category] || "Por confirmar"], ["Club", entry.club], ["País", entry.country],
+        ["Usuario", entry.username && "@" + entry.username.replace(/^@/, "")],
+        ["Torneo", entry.tournament], ["Puesto", entry.rank ?? "Sin clasificar"]
+      ];
+      for (const [label, value] of fields) {
+        if (!value) continue;
+        const term = document.createElement("dt");
+        const description = document.createElement("dd");
+        term.textContent = label;
+        description.textContent = value;
+        facts.append(term, description);
+      }
+      if (entry.robloxId && /^\d+$/.test(String(entry.robloxId))) {
+        const term = document.createElement("dt");
+        term.textContent = "Roblox";
+        const description = document.createElement("dd");
+        const roblox = document.createElement("a");
+        roblox.href = "https://www.roblox.com/users/" + entry.robloxId + "/profile";
+        roblox.textContent = "Ver perfil en Roblox";
+        description.append(roblox);
+        facts.append(term, description);
+      }
+      profile.showModal();
+    });
+    return link;
+  }
+  function renderRoster() {
+    const roster = document.getElementById("roster");
+    const members = rankings.filter(entry => entry.club === clubName);
+    roster.replaceChildren();
+    for (const member of members) {
+      const item = document.createElement("li");
+      const link = playerLink(member);
+      const avatar = document.createElement("img");
+      avatar.className = "avatar";
+      avatar.alt = "";
+      avatar.src = "avatar-" + member.robloxId + ".png";
+      const text = document.createElement("span");
+      const name = document.createElement("strong");
+      name.textContent = member.name;
+      const position = document.createElement("small");
+      position.textContent = categories[member.category] || "Posición por confirmar";
+      text.append(name, position);
+      link.replaceChildren(avatar, text);
+      item.append(link);
+      roster.append(item);
+    }
+    roster.hidden = !members.length;
+    document.getElementById("roster-empty").hidden = Boolean(members.length);
+  }
   const controls = document.querySelector(".controls");
   const buttons = [...controls.querySelectorAll("button")];
   const diagram = document.querySelector(".diagram");
@@ -241,14 +367,15 @@
     const query = normalizeName(search.value);
     const usernameOnly = query.startsWith("@");
     function matches(entry) {
-      if (!query) return entry.category === activeCategory;
+      if (!query) return entry.category === activeCategory && Number.isFinite(entry.rank);
       if (entry.category === "clubes") return false;
       const username = normalizeName(entry.username || "").replace(/^@/, "");
       if (usernameOnly) return query.length > 1 && username.includes(query.slice(1));
       return normalizeName(entry.name).includes(query) || username.includes(query);
     }
-    const results = rankings.filter(matches).sort((a, b) => a.rank - b.rank || a.name.localeCompare(b.name, "es"));
+    const results = rankings.filter(matches).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity) || a.name.localeCompare(b.name, "es"));
     const isSearch = Boolean(query);
+    document.getElementById("club-directory").hidden = isSearch || activeCategory !== "clubes";
     controls.classList.toggle("searching", isSearch);
     for (const option of buttons) option.setAttribute("aria-pressed", String(!isSearch && option.dataset.category === activeCategory));
     document.getElementById("entity").textContent = isSearch ? "Jugador" : categories[activeCategory];
@@ -259,16 +386,16 @@
     tbody.replaceChildren();
     for (const entry of results) {
       const row = tbody.insertRow();
-      row.insertCell().textContent = entry.rank;
+      row.insertCell().textContent = entry.rank ?? "Sin clasificar";
       const nameCell = row.insertCell();
-      nameCell.textContent = entry.name;
+      nameCell.append(playerLink(entry));
       if (entry.username) {
         const handle = document.createElement("small");
         handle.textContent = "@" + entry.username.replace(/^@/, "");
         nameCell.append(handle);
       }
-      row.insertCell().textContent = categories[entry.category];
-      row.insertCell().textContent = entry.country;
+      row.insertCell().textContent = categories[entry.category] || "Por confirmar";
+      row.insertCell().textContent = entry.country || "Por confirmar";
     }
     table.caption.textContent = isSearch ? "Jugadores encontrados en todas las posiciones" : "Ranking de " + activeCategory;
     document.getElementById("name-column").textContent = !isSearch && activeCategory === "clubes" ? "Club" : "Jugador";
@@ -285,7 +412,6 @@
     search.value = "";
     controls.style.setProperty("--index", index);
     diagram.dataset.view = activeCategory;
-    document.getElementById("field-label").textContent = button.textContent;
     renderRanking();
     reveal?.cancel();
     if (!reducedMotion.matches && status.animate) {
@@ -296,17 +422,37 @@
     }
   }
   buttons.forEach((button, index) => button.addEventListener("click", () => selectCategory(button, index)));
+  for (const marker of diagram.querySelectorAll("[data-position]")) {
+    marker.addEventListener("click", () => {
+      const index = buttons.findIndex(button => button.dataset.category === marker.dataset.position);
+      const tab = buttons[index];
+      selectCategory(tab, index);
+      tab.focus({ preventScroll: true });
+      controls.scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
+    });
+  }
   search.addEventListener("input", renderRanking);
   reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) reveal?.cancel() });
 
   function showScreen() {
     const signingIn = location.hash === "#iniciar-sesion";
-    document.getElementById("ranking-view").hidden = signingIn;
+    const seeingClub = location.hash === "#club/arshadows-fc";
+    if (profile.open) profile.close();
+    document.getElementById("club-view").hidden = !seeingClub;
+    document.getElementById("ranking-view").hidden = signingIn || seeingClub;
     document.getElementById("account-view").hidden = !signingIn;
     document.getElementById("signin-link").hidden = signingIn;
-    document.title = "Illegal Soccer LATAM · " + (signingIn ? "Iniciar sesión" : "Rankings");
+    document.title = "Illegal Soccer LATAM · " + (signingIn ? "Iniciar sesión" : seeingClub ? clubName : "Rankings");
     if (signingIn) {
       document.getElementById("account-title").focus();
+    } else if (seeingClub) {
+      renderRoster();
+      window.scrollTo(0, 0);
+      document.getElementById("club-title").focus({ preventScroll: true });
+    } else if (location.hash === "#clubes") {
+      const index = buttons.findIndex(button => button.dataset.category === "clubes");
+      selectCategory(buttons[index], index);
+      document.querySelector(".club-link").focus();
     } else if (location.hash === "#clasificacion") {
       search.focus();
     }
