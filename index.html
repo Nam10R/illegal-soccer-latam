@@ -125,6 +125,10 @@
     .ideal h3,.club-card h3 { margin: 0; font-size: 1.3rem; letter-spacing: -.025em }
     .club-link { display: flex; align-items: center; gap: 1rem; width: fit-content; margin-top: .75rem; font-size: 1.15rem; font-weight: 700; text-underline-offset:.2rem }
     .club-link img { width: 4rem; height: 4rem; border-radius:.6rem }
+    #club-directory { display:grid; grid-template-rows:1fr; opacity:1 }
+    #club-directory[inert] { grid-template-rows:0fr; opacity:0 }
+    #club-directory > div { min-height:0; overflow:clip }
+    #club-directory .club-card { margin:0 0 .8rem }
     .club-view { min-height: 65vh; padding-block: 2rem 4rem }
     .club-hero { display:flex; flex-wrap:wrap; gap: clamp(1rem,4vw,3rem); align-items:center; margin:1.25rem 0; padding:clamp(1.25rem,4vw,3rem); background:#172628; color:#fff; border-radius:1rem }
     .club-hero img { width:clamp(7rem,19vw,13rem); height:auto; border-radius:.75rem }
@@ -158,6 +162,37 @@
       .controls button[aria-pressed="false"]:hover { color: var(--ink); background: #d8e1d3 }
     }
     @media (prefers-reduced-motion: no-preference) {
+      #club-directory { transition:grid-template-rows 240ms var(--ease), opacity 180ms ease-out }
+      ::view-transition-old(root) { animation: screen-out 180ms ease-out both }
+      ::view-transition-new(root) { animation: screen-in 240ms var(--ease) both }
+      ::view-transition { pointer-events:none }
+      @keyframes screen-out { to { opacity:0 } }
+      @keyframes screen-in { from { opacity:0; transform:translateY(5px) } }
+      @supports not (view-transition-name: none) {
+        main > :not([hidden]) { animation: screen-in 240ms var(--ease) both }
+      }
+      @supports (transition-behavior: allow-discrete) {
+        #player-profile {
+          opacity:0; transform:translateY(6px) scale(.985);
+          transition:opacity 160ms ease, transform 200ms var(--ease), display 200ms allow-discrete, overlay 200ms allow-discrete;
+        }
+        #player-profile[open] { opacity:1; transform:none }
+        #player-profile::backdrop {
+          opacity:0; transition:opacity 180ms ease, display 200ms allow-discrete, overlay 200ms allow-discrete;
+        }
+        #player-profile[open]::backdrop { opacity:1 }
+        @starting-style {
+          #player-profile[open] { opacity:0; transform:translateY(6px) scale(.985) }
+          #player-profile[open]::backdrop { opacity:0 }
+        }
+      }
+      @supports (interpolate-size:allow-keywords) and selector(details::details-content) {
+        .info-panel::details-content {
+          interpolate-size:allow-keywords; height:0; overflow:clip; opacity:0;
+          transition:height 220ms var(--ease), opacity 180ms ease-out, content-visibility 220ms allow-discrete;
+        }
+        .info-panel[open]::details-content { height:auto; opacity:1 }
+      }
       .headline, .diagram { animation: arrive 520ms var(--ease) backwards }
       .diagram { animation-delay: 60ms }
       .selection { transition: transform 300ms var(--ease) }
@@ -223,10 +258,10 @@
       <button type="button" aria-pressed="false" data-category="porteros">Porteros</button>
       <button type="button" aria-pressed="false" data-category="clubes">Clubes</button>
     </div>
-    <section class="club-card" id="club-directory" hidden>
+    <div id="club-directory" inert><div><section class="club-card">
       <h3>Clubes de la comunidad</h3>
       <a class="club-link" href="#club/arshadows-fc"><img src="arshadows-fc.png" width="64" height="64" alt="">Arshadows FC</a>
-    </section>
+    </section></div></div>
     <div class="board"><span id="announcement" class="sr-only" role="status"></span>
       <table class="lookup" hidden><caption></caption><thead><tr><th scope="col">Puesto</th><th scope="col" id="name-column">Jugador</th><th scope="col">Categoría</th><th scope="col">País</th></tr></thead><tbody></tbody></table>
       <div class="tablehead" aria-hidden="true"><span>Puesto</span><span id="entity">Delantero</span><span>País</span></div>
@@ -355,8 +390,10 @@
   const table = document.querySelector(".lookup");
   const empty = document.querySelector(".empty");
   const tablehead = document.querySelector(".tablehead");
+  const board = document.querySelector(".board");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reveal;
+  let screenTransition;
   let activeCategory = "delanteros";
 
   function normalizeName(value) {
@@ -375,7 +412,7 @@
     }
     const results = rankings.filter(matches).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity) || a.name.localeCompare(b.name, "es"));
     const isSearch = Boolean(query);
-    document.getElementById("club-directory").hidden = isSearch || activeCategory !== "clubes";
+    document.getElementById("club-directory").inert = isSearch || activeCategory !== "clubes";
     controls.classList.toggle("searching", isSearch);
     for (const option of buttons) option.setAttribute("aria-pressed", String(!isSearch && option.dataset.category === activeCategory));
     document.getElementById("entity").textContent = isSearch ? "Jugador" : categories[activeCategory];
@@ -408,16 +445,17 @@
 
   function selectCategory(button, index) {
     if (!search.value && button.dataset.category === activeCategory) return;
+    const direction = Math.sign(index - buttons.findIndex(option => option.dataset.category === activeCategory));
     activeCategory = button.dataset.category;
     search.value = "";
     controls.style.setProperty("--index", index);
     diagram.dataset.view = activeCategory;
     renderRanking();
     reveal?.cancel();
-    if (!reducedMotion.matches && status.animate) {
-      reveal = status.animate(
-        [{ opacity: .35, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }],
-        { duration: 220, easing: "ease-out" }
+    if (!reducedMotion.matches && board.animate) {
+      reveal = board.animate(
+        [{ opacity: .65, transform: "translateX(" + direction * 7 + "px)" }, { opacity: 1, transform: "none" }],
+        { duration: 230, easing: "cubic-bezier(.22,1,.36,1)" }
       );
     }
   }
@@ -432,7 +470,12 @@
     });
   }
   search.addEventListener("input", renderRanking);
-  reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) reveal?.cancel() });
+  reducedMotion.addEventListener("change", () => {
+    if (reducedMotion.matches) {
+      reveal?.cancel();
+      screenTransition?.skipTransition();
+    }
+  });
 
   function showScreen() {
     const signingIn = location.hash === "#iniciar-sesion";
@@ -457,7 +500,18 @@
       search.focus();
     }
   }
-  window.addEventListener("hashchange", showScreen);
+  window.addEventListener("hashchange", () => {
+    screenTransition?.skipTransition();
+    if (reducedMotion.matches || !document.startViewTransition) {
+      showScreen();
+      return;
+    }
+    const transition = document.startViewTransition(showScreen);
+    screenTransition = transition;
+    transition.finished.then(() => {
+      if (screenTransition === transition) screenTransition = undefined;
+    });
+  });
   renderRanking();
   showScreen();
 </script>
