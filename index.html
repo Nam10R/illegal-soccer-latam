@@ -1,69 +1,202 @@
 <!doctype html>
 <html lang="es">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#122820">
-<title>Illegal Soccer LATAM · Rankings</title>
-<style>
-* {box-sizing:border-box}
-:root {color-scheme:light;--ink:#122820;--paper:#f3f4ee;--lime:#d2fa54}
-body {margin:0;background:var(--paper);color:var(--ink);font:1rem/1.5 "Barlow",Arial,sans-serif}
-header,footer {background:var(--ink);color:white}
-.wrap {width:min(1120px,90%);margin:auto}
-nav,footer .wrap {display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 0}
-.brand {display:flex;gap:.8rem;align-items:center;font-weight:800}
-.mark {display:grid;place-items:center;background:var(--lime);color:var(--ink);width:2.4rem;height:2.4rem;transform:skew(-8deg);font:bold italic 1.25rem Arial}
-nav a {color:white;text-underline-offset:.3rem}
-.hero {background:var(--ink);color:white;border-top:1px solid #395348;overflow:hidden}
-.hero .wrap {display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:2rem;padding:3.2rem 0 3.8rem}
-.kicker,.tablehead {text-transform:uppercase;letter-spacing:.12em;font-size:.875rem;font-weight:700}
-.kicker {color:var(--lime);margin:0 0 1rem}
-h1,h2 {font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif;line-height:.98;margin:0;letter-spacing:-.055em}
-h1 {font-size:clamp(3.3rem,7.5vw,6.9rem);text-transform:uppercase;font-style:italic}
-h1 span {color:var(--lime);display:block}
-.pitch {position:relative;aspect-ratio:1.55;transform:rotate(-7deg) skewX(-6deg);border:2px solid #a7ca8f;border-radius:3px;background:repeating-linear-gradient(90deg,#254d38 0 12.5%,#2c583e 12.5% 25%);outline:9px solid #203f30;box-shadow:1rem 1.5rem 0 #0e211a}
-.pitch:before,.pitch:after,.box,.circle {content:"";position:absolute;border:2px solid #a7ca8f}
-.pitch:before {left:50%;top:0;bottom:0;border-width:0 0 0 2px}
-.circle {top:50%;left:50%;width:22%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%)}
-.box {width:18%;height:54%;top:23%}.box.left {left:0;border-left:0}.box.right {right:0;border-right:0}
-.pitch:after {left:64%;top:36%;width:6%;aspect-ratio:1;background:var(--lime);border:3px solid var(--ink);border-radius:50%;box-shadow:0 0 0 5px #cffa5755}
-.rankings {padding:3rem 0 4rem;min-height:48vh}
-h2 {font-size:clamp(2.25rem,5vw,3.6rem)}
-.controls {display:flex;gap:.5rem;flex-wrap:wrap;margin:1.5rem 0}
-button {font:inherit;font-weight:700;color:var(--ink);border:1px solid #859789;padding:.6rem 1.1rem;background:transparent;border-radius:2rem;cursor:pointer}
-button[aria-pressed=true] {background:var(--ink);color:var(--lime);border-color:var(--ink)}
-button:focus-visible,a:focus-visible {outline:3px solid #dd811a;outline-offset:3px}
-.board {background:#fff;border:1px solid #c4cfc2;border-radius:.5rem;overflow:hidden}
-.tablehead {display:grid;grid-template-columns:5rem 1fr 4rem;gap:.5rem;background:#dfe6da;padding:.9rem 1.3rem}
-.empty {text-align:center;padding:2rem 1rem}
-.empty strong {font-size:1.2rem}.empty p {margin:.35rem auto 0;max-width:42ch;color:#4b5e51}
-footer .wrap {font-size:.875rem}
-@media(max-width:660px){.hero .wrap{grid-template-columns:1fr;gap:2rem;padding:2rem 0}.pitch{width:65%;margin:0 auto .6rem}.rankings{padding:2rem 0}.tablehead{grid-template-columns:4.5rem 1fr 3rem}.brand{gap:.5rem}button{padding:.55rem .9rem}}
-</style>
-<header><nav class="wrap" aria-label="Principal"><div class="brand"><span class="mark" aria-hidden="true">IS</span>Illegal Soccer LATAM</div><a href="https://www.roblox.com/es/games/126987974021910/Illegal-Soccer">Jugar en Roblox</a></nav></header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#112b25">
+  <title>Illegal Soccer LATAM · Rankings</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #112b25;
+      --muted: #52665d;
+      --lime: #d7fc69;
+      --paper: #f5f6ef;
+      --rule: #cdd5c9;
+      --ease: cubic-bezier(.22,1,.36,1);
+      font-family: "Barlow", "Segoe UI", Arial, sans-serif;
+    }
+    * { box-sizing: border-box }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-size: 1rem; line-height: 1.5 }
+    button, a { font: inherit; -webkit-tap-highlight-color: transparent }
+    a { color: inherit }
+    :focus-visible { outline: 3px solid #e37822; outline-offset: 4px }
+    .wrap { width: min(76rem, 90%); margin-inline: auto }
+    header, .hero, footer { background-color: var(--ink); color: #f6f9ee }
+    nav, footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 1rem }
+    nav { min-height: 4.5rem }
+    .brand { display: inline-flex; align-items: center; gap: .65rem; font-weight: 800; letter-spacing: -.035em }
+    .mark {
+      display: grid; place-items: center; width: 2.2rem; height: 2.15rem; border-radius: .3rem;
+      background: var(--lime); color: var(--ink); transform: skewX(-9deg); font: italic 900 1.35rem Arial,sans-serif;
+    }
+    .region { color: var(--lime) }
+    .play {
+      display: inline-flex; align-items: center; gap: .65rem; min-height: 2.75rem; padding: .45rem .95rem;
+      border: 1px solid #748a7d; border-radius: .45rem; text-decoration: none; font-size: .92rem; font-weight: 650;
+    }
+    .play::before { content: ""; border: .32rem solid transparent; border-left: .49rem solid var(--lime); border-right: 0 }
+    .hero { position: relative; isolation: isolate; overflow: hidden; border-top: 1px solid #385047 }
+    .hero::before {
+      content: ""; position: absolute; z-index: -1; inset: 0;
+      background: radial-gradient(ellipse at 85% 65%, #375f3c 0, transparent 48%), linear-gradient(110deg,#102c26 24%,#203e2f);
+    }
+    .hero .wrap { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 3rem; padding-block: clamp(2.4rem,5.3vw,5.1rem) }
+    .eyebrow, .tablehead, .diagram figcaption {
+      font: 700 .8rem/1.4 "IBM Plex Mono", Consolas, monospace; text-transform: uppercase; letter-spacing: .1em;
+    }
+    .eyebrow { display: flex; align-items: center; gap: .7rem; margin: 0 0 .9rem; color: #d7e9d4 }
+    .bars { display: inline-block; width: 1.9rem; height: .8rem; background: repeating-linear-gradient(90deg,var(--lime) 0 5px,transparent 5px 9px); transform: skewX(-20deg) }
+    h1, h2, .empty h3 { margin: 0; font-family: "Barlow Condensed","Arial Narrow",Arial,sans-serif }
+    h1 { font-size: clamp(3.85rem,7.5vw,7rem); line-height: .85; font-style: italic; text-transform: uppercase; font-weight: 900; letter-spacing: -.075em }
+    h1 span { display: block; color: var(--lime) }
+    .diagram { margin: 0; width: min(100%,31rem); justify-self: end }
+    .field {
+      position: relative; aspect-ratio: 2.05; border: 1px solid #b3cba0; border-radius: 3px; color: #c5dcb190;
+      background: repeating-linear-gradient(90deg,#325740 0 12.5%,#2e523d 12.5% 25%);
+      box-shadow: 0 0 0 .32rem #274634,0 0 0 calc(.32rem + 1px) #628062,0 .7rem 1.8rem #091e172e;
+    }
+    .midline, .ring, .penalty, .goal, .spot, .player { position: absolute }
+    .midline { inset: 0 auto 0 50%; border-left: 1px solid }
+    .ring { top: 50%; left: 50%; width: 19%; aspect-ratio: 1; border: 1px solid; border-radius: 50%; transform: translate(-50%,-50%) }
+    .spot { top: 50%; left: 50%; border: 2px solid; border-radius: 50%; transform: translate(-50%,-50%) }
+    .penalty, .goal { top: 50%; transform: translateY(-50%); width: 15%; height: 60%; border: 1px solid }
+    .goal { width: 5.5%; height: 27% }
+    .left { left: 0; border-left-width: 0 }
+    .right { right: 0; border-right-width: 0 }
+    .player {
+      width: clamp(.7rem,1.35vw,1.05rem); aspect-ratio: 1; border: 2px solid #fff8e9;
+      border-radius: 50%; background: #173d30; translate: -50% -50%;
+    }
+    .keeper { left: 9%; top: 50% }
+    .back { left: 30%; top: 68% }
+    .mid { left: 45%; top: 25% }
+    .wing { left: 62%; top: 73% }
+    .forward { left: 78%; top: 38% }
+    .diagram[data-view="delanteros"] .forward,
+    .diagram[data-view="porteros"] .keeper,
+    .diagram[data-view="clubes"] .player { background: var(--lime); border-color: var(--ink); box-shadow: 0 0 0 3px var(--lime),0 0 0 8px #d7fc692b }
+    .diagram figcaption { margin-top: 1rem; text-align: right; color: #d7e9c9 }
+    .rankings { padding-block: clamp(2rem,4vw,3.65rem) 4rem }
+    h2 { font-size: clamp(2.1rem,4.3vw,3.6rem); line-height: 1.05; letter-spacing: -.065em }
+    .controls {
+      position: relative; display: inline-grid; grid-template-columns: repeat(3,minmax(0,1fr)); isolation: isolate;
+      padding: 4px; max-width: 100%; margin: 1.35rem 0; border: 1px solid var(--rule); border-radius: .8rem; background: #e7ebe1;
+    }
+    .selection {
+      position: absolute; z-index: -1; inset: 4px auto 4px 4px; width: calc((100% - 8px)/3); pointer-events: none;
+      transform: translateX(calc(var(--index,0)*100%)); background: var(--ink); border-radius: .58rem;
+      box-shadow: 0 2px 4px #112b2525;
+    }
+    .controls button { position: relative; min-height: 2.75rem; padding: .45rem 1.25rem; background: transparent; color: var(--muted); border: 0; border-radius: .58rem; font-weight: 700; cursor: pointer }
+    .controls button[aria-pressed="true"] { color: var(--lime) }
+    .board { background: #fff; border: 1px solid var(--rule); border-radius: .85rem; overflow: hidden; box-shadow: 0 .5rem 1.6rem #18392a09 }
+    .tablehead { display: grid; grid-template-columns: minmax(4.7rem,14%) 1fr auto; gap: .5rem; background: #e9eee3; color: #455e50; padding: .85rem clamp(.9rem,3vw,2rem); border-bottom: 1px solid var(--rule) }
+    .empty { display: grid; justify-items: center; text-align: center; padding: 1.65rem 1rem 2rem }
+    .podium { display: flex; align-items: end; gap: 3px; height: 1.8rem; margin: 0 0 .85rem }
+    .podium i { width: .65rem; height: 56%; background: #97b38a; border-radius: 2px 2px 0 0 }
+    .podium i:nth-child(2) { height: 90%; background: #486e50 }
+    .podium i:nth-child(3) { height: 38% }
+    .empty h3 { font-size: clamp(1.18rem,2vw,1.5rem); letter-spacing: -.035em; line-height: 1.2 }
+    .empty p { margin: .45rem 0 0; max-width: 48ch; color: var(--muted) }
+    footer .wrap { min-height: 4.2rem; font-size: .875rem }
+    @media (hover:hover) {
+      .play:hover { border-color: var(--lime); background: #254438 }
+      .controls button[aria-pressed="false"]:hover { color: var(--ink); background: #d8e1d3 }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .headline, .diagram { animation: arrive 520ms var(--ease) backwards }
+      .diagram { animation-delay: 60ms }
+      .selection { transition: transform 300ms var(--ease) }
+      .controls button, .play { transition: color 180ms,background-color 180ms,border-color 180ms }
+      .player { transition: box-shadow 320ms var(--ease), background-color 200ms, border-color 200ms }
+      @keyframes arrive { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
+    }
+    @media (max-width: 680px) {
+      nav { min-height: 4rem }
+      .wrap { width: 90% }
+      .hero .wrap { grid-template-columns: 1fr; gap: 1.65rem; padding-block: 2rem 1.25rem }
+      h1 { font-size: clamp(2.6rem,9.7vw,4rem) }
+      h1 span { display: inline }
+      .diagram { width: 100% }
+      .field { aspect-ratio: 2.65 }
+      .diagram figcaption { margin-top: .65rem }
+      .controls { display: grid }
+      .controls button { padding-inline: .35rem }
+      .brand { gap: .4rem }
+      .play { padding-inline: .6rem }
+      footer .wrap { flex-wrap: wrap; padding-block: .85rem; gap: .2rem 1rem }
+    }
+    @media (max-width:360px) {
+      nav { gap: .35rem }
+      .brand,.play { font-size: .85rem }
+      .mark { width: 1.7rem; height: 1.7rem }
+    }
+  </style>
+</head>
+<body>
+<header><nav class="wrap" aria-label="Principal">
+  <div class="brand"><span class="mark" aria-hidden="true">IS</span><span>Illegal Soccer <span class="region">LATAM</span></span></div>
+  <a class="play" href="https://www.roblox.com/es/games/126987974021910/Illegal-Soccer">Jugar en Roblox</a>
+</nav></header>
 <main>
-<section class="hero"><div class="wrap"><div><p class="kicker">Illegal Soccer / Latinoamérica</p><h1>Ranking <span>LATAM</span></h1></div><div class="pitch" aria-hidden="true"><i class="circle"></i><i class="box left"></i><i class="box right"></i></div></div></section>
-<section class="rankings wrap" aria-labelledby="heading"><h2 id="heading">Clasificación regional</h2>
-<div class="controls" role="group" aria-label="Elegir categoría">
-<button type="button" aria-pressed="true" data-category="delanteros">Delanteros</button>
-<button type="button" aria-pressed="false" data-category="porteros">Porteros</button>
-<button type="button" aria-pressed="false" data-category="clubes">Clubes</button></div>
-<div class="board" aria-live="polite" aria-atomic="true"><div class="tablehead" aria-hidden="true"><span>Puesto</span><span id="entity">Delantero</span><span>País</span></div>
-<div class="empty"><strong id="status">El ranking de delanteros está pendiente</strong><p>Los puestos se publicarán cuando haya resultados confirmados de la comunidad latinoamericana.</p></div></div>
-</section></main>
+  <section class="hero" aria-labelledby="title"><div class="wrap">
+    <div class="headline"><p class="eyebrow"><i class="bars" aria-hidden="true"></i>Illegal Soccer / Latinoamérica</p><h1 id="title">Ranking <span>LATAM</span></h1></div>
+    <figure class="diagram" data-view="delanteros" aria-hidden="true">
+      <div class="field"><i class="midline"></i><i class="ring"></i><i class="spot"></i><i class="penalty left"></i><i class="penalty right"></i><i class="goal left"></i><i class="goal right"></i>
+        <i class="player keeper"></i><i class="player back"></i><i class="player mid"></i><i class="player wing"></i><i class="player forward"></i></div>
+      <figcaption id="field-label">Delanteros</figcaption>
+    </figure>
+  </div></section>
+  <section class="rankings wrap" aria-labelledby="heading">
+    <h2 id="heading">Clasificación regional</h2>
+    <div class="controls" role="group" aria-label="Elegir categoría">
+      <span class="selection" aria-hidden="true"></span>
+      <button type="button" aria-pressed="true" data-category="delanteros">Delanteros</button>
+      <button type="button" aria-pressed="false" data-category="porteros">Porteros</button>
+      <button type="button" aria-pressed="false" data-category="clubes">Clubes</button>
+    </div>
+    <div class="board">
+      <div class="tablehead" aria-hidden="true"><span>Puesto</span><span id="entity">Delantero</span><span>País</span></div>
+      <div class="empty">
+        <span class="podium" aria-hidden="true"><i></i><i></i><i></i></span>
+        <h3 id="status" aria-live="polite" aria-atomic="true">El ranking de delanteros está pendiente</h3>
+        <p>Los puestos se publicarán cuando haya resultados confirmados de la comunidad latinoamericana.</p>
+      </div>
+    </div>
+  </section>
+</main>
 <footer><div class="wrap"><strong>Illegal Soccer LATAM</strong><span>Ranking de la comunidad</span></div></footer>
 <script>
-const labels = { delanteros: "Delantero", porteros: "Portero", clubes: "Club" };
-const buttons = document.querySelectorAll("[data-category]");
-for (const button of buttons) {
-  button.addEventListener("click", () => {
+  const categories = { delanteros: "Delantero", porteros: "Portero", clubes: "Club" };
+  const controls = document.querySelector(".controls");
+  const buttons = [...controls.querySelectorAll("button")];
+  const diagram = document.querySelector(".diagram");
+  const status = document.getElementById("status");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let reveal;
+
+  function selectCategory(button, index) {
+    if (button.getAttribute("aria-pressed") === "true") return;
+    const category = button.dataset.category;
     for (const option of buttons) {
       option.setAttribute("aria-pressed", String(option === button));
     }
-    const category = button.dataset.category;
-    document.getElementById("entity").textContent = labels[category];
-    document.getElementById("status").textContent = "El ranking de " + category + " está pendiente";
-  });
-}
+    controls.style.setProperty("--index", index);
+    diagram.dataset.view = category;
+    document.getElementById("field-label").textContent = button.textContent;
+    document.getElementById("entity").textContent = categories[category];
+    status.textContent = "El ranking de " + category + " está pendiente";
+    reveal?.cancel();
+    if (!reducedMotion.matches && status.animate) {
+      reveal = status.animate(
+        [{ opacity: .35, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 220, easing: "ease-out" }
+      );
+    }
+  }
+  buttons.forEach((button, index) => button.addEventListener("click", () => selectCategory(button, index)));
+  reducedMotion.addEventListener("change", () => { if (reducedMotion.matches) reveal?.cancel() });
 </script>
+</body>
 </html>
