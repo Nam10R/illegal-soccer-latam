@@ -163,14 +163,8 @@
     }
     @media (prefers-reduced-motion: no-preference) {
       #club-directory { transition:grid-template-rows 240ms var(--ease), opacity 180ms ease-out }
-      ::view-transition-old(root) { animation: screen-out 180ms ease-out both }
-      ::view-transition-new(root) { animation: screen-in 240ms var(--ease) both }
-      ::view-transition { pointer-events:none }
-      @keyframes screen-out { to { opacity:0 } }
-      @keyframes screen-in { from { opacity:0; transform:translateY(5px) } }
-      @supports not (view-transition-name: none) {
-        main > :not([hidden]) { animation: screen-in 240ms var(--ease) both }
-      }
+      main > :not([hidden]) { animation: screen-in 220ms var(--ease) backwards }
+      @keyframes screen-in { from { opacity:.35 } to { opacity:1 } }
       @supports (transition-behavior: allow-discrete) {
         #player-profile {
           opacity:0; transform:translateY(6px) scale(.985);
@@ -393,7 +387,6 @@
   const board = document.querySelector(".board");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let reveal;
-  let screenTransition;
   let activeCategory = "delanteros";
 
   function normalizeName(value) {
@@ -473,7 +466,6 @@
   reducedMotion.addEventListener("change", () => {
     if (reducedMotion.matches) {
       reveal?.cancel();
-      screenTransition?.skipTransition();
     }
   });
 
@@ -500,18 +492,7 @@
       search.focus();
     }
   }
-  window.addEventListener("hashchange", () => {
-    screenTransition?.skipTransition();
-    if (reducedMotion.matches || !document.startViewTransition) {
-      showScreen();
-      return;
-    }
-    const transition = document.startViewTransition(showScreen);
-    screenTransition = transition;
-    transition.finished.then(() => {
-      if (screenTransition === transition) screenTransition = undefined;
-    });
-  });
+  window.addEventListener("hashchange", showScreen);
   renderRanking();
   showScreen();
 </script>
