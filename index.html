@@ -105,6 +105,9 @@
     footer .wrap { min-height: 4.2rem; font-size: .875rem }
     [hidden] { display: none !important }
     .actions { display: flex; align-items: center; gap: .65rem }
+    .league-link { color: #f2e9ff; border-bottom: 2px solid #bfa5ff; padding: .5rem .2rem .33rem; text-decoration: none; font-weight: 750; white-space: nowrap }
+    .league-link:hover { color: #decaff }
+    @media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto } }
     .signin { padding: .58rem .9rem; border-radius: .45rem; background: var(--lime); color: var(--ink); text-decoration: none; font-weight: 750; font-size: .92rem }
     .search { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem; margin: 1.4rem 0 0 }
     .search label { font-weight: 700 }
@@ -222,7 +225,7 @@
 <body>
 <header><nav class="wrap" aria-label="Principal">
   <div class="brand"><span class="mark" aria-hidden="true">IS</span><span>Illegal Soccer <span class="region">LATAM</span></span></div>
-  <div class="actions"><a class="play" href="https://www.roblox.com/es/games/126987974021910/Illegal-Soccer">Jugar en Roblox</a>
+  <div class="actions"><a class="league-link" href="liga.html">Liga oficial</a><a class="play" href="https://www.roblox.com/es/games/126987974021910/Illegal-Soccer">Jugar en Roblox</a>
   <a class="signin" id="signin-link" href="#iniciar-sesion">Iniciar sesión</a></div>
 </nav></header>
 <main>
