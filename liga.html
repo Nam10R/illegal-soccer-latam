@@ -52,7 +52,7 @@
     .quota p { margin: .25rem 0; color: var(--muted); font-size: .94rem }
     .meter { display: flex; gap: .24rem; margin-top: .65rem }
     .meter i { height: .3rem; flex: 1; background: var(--accent); border-radius: 1px }
-    .meter i:last-child { background: var(--line) }
+    .meter i:nth-last-child(-n+2) { background: var(--line) }
     .board { background: var(--panel); border: 1px solid var(--line); border-radius: .75rem; overflow: hidden }
     .board-head { padding: 1.15rem clamp(.8rem,3vw,2rem); border-bottom: 1px solid var(--line) }
     .board-head p { margin: .25rem 0 0; color: var(--muted); font-size: .9rem }
@@ -116,7 +116,7 @@
     <section id="division-1" aria-labelledby="division-title">
       <a class="back" href="#destinos"><span aria-hidden="true">←</span> Elegir destino</a>
       <div class="league-head"><div><p class="kicker">Avante League</p><h1 id="division-title" tabindex="-1">División 1</h1></div>
-        <div class="quota"><strong>7 de 8</strong> clubes registrados<p>Falta un club para empezar.</p>
+        <div class="quota"><strong>6 de 8</strong> clubes registrados<p>Faltan dos clubes para empezar.</p>
           <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
       </div>
@@ -131,7 +131,6 @@
                 <tr><th scope="row"><span class="team"><img src="los-rayos.jpg" width="52" height="52" alt="">Los Rayos</span></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
                 <tr><th scope="row"><span class="team"><img src="los-vaguens.jpg" width="52" height="52" alt="">Los Vaguens</span></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
                 <tr><th scope="row"><span class="team"><img src="nova-milan.jpg" width="52" height="52" alt="">Nova Milan</span></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-                <tr><th scope="row"><span class="team"><img src="opium-society.jpg" width="52" height="52" alt="">Opium Society</span></th><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
             </tbody>
           </table>
         </div>
